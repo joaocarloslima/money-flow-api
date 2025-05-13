@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import org.springframework.context.support.BeanDefinitionDsl.Role;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
@@ -16,7 +17,7 @@ import br.com.fiap.money_flow_api.model.UserRole;
 
 @Service
 public class TokenService {
-    private Instant expiresAt = LocalDateTime.now().plusMinutes(10).toInstant(ZoneOffset.ofHours(-3));
+    private Instant expiresAt = LocalDateTime.now().plusMinutes(120).toInstant(ZoneOffset.ofHours(-3));
     private Algorithm algorithm = Algorithm.HMAC256("secret");
 
     public Token createToken(User user){
@@ -34,10 +35,11 @@ public class TokenService {
 
     public User getUserFromToken(String jwt) {
         var jwtVerified = JWT.require(algorithm).build().verify(jwt);
+        String role = jwtVerified.getClaim("role").asString();
         return User.builder()
                     .id(Long.valueOf(jwtVerified.getSubject()))
                     .email(jwtVerified.getClaim("email").toString())
-                    .role(UserRole.ADMIN)
+                    .role(UserRole.valueOf(role))
                     .build();
 
     }
