@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.fiap.money_flow_api.model.Category;
@@ -21,6 +22,7 @@ import br.com.fiap.money_flow_api.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 
 @Configuration
+@Profile("dev")
 public class DatabaseSeeder {
 
     @Autowired
